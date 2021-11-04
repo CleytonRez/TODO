@@ -1,129 +1,151 @@
 // Importa express do arquivo express.
 import express from "express"
+import { readList, createList, updateList, deleteList } from "./services/services"
+import listController from "./controllers/listControllers";
 
-// Lista de objeto com chaves.
-let todoList = [
-    {
-        _id: "123",
-        text: "ola mundo.",
-        isChecked: true
-    }
-]
 
 //variavel que recebe express
 const app = express();
 app.use(express.json());
 
-// read all
-app.get('/todo', function (req, res) {
-    res.json({
-        response: todoList
-    })
-})
-// readbyid
-app.get('/todo/:id', function (request, response) {
+listController(app)
 
-    // Pega o ID do path.params.
-    const id = request.params.id
+// ---------------------------- CRUD ---------------------------//
 
-    // Varre a lista de TODO e RETORNA O OBJETO CASO ENCONTRE.
-    const todo = todoList.find((obj) => {
-        return obj._id === id
-    })
-    // Responde para o cliente o OBJ do ID procurado.
-    response.json({
-        response: todo
-    })
+// readList()
 
-})
-// Metodo de requisicao HTTP que inclue um elemento/s (POST)
-app.post('/todo', (request, response) => {
+// createList(
+//   {
+//     "text": "Tomar Café da Manha ",
+//     "isChecked": false
+// }
+//)
 
-    // variavel que recebe o body
-    const body = request.body
+// updateList(
+//     {
+//         "id": "1",
+//         "text": "Almoçar"
+//     }
+// );
 
-    // variavel que recebe um numero aleatorio como id.
-    const id = Math.random()
+// deleteList(
+//     {
+//         "id": "1"
+//     }
+// )
 
-    //  Variavel Objeto que preenche as chaves com as informacoes adicionadas.
-    const todo = {
-        _id: id,
-        text: body.text,
-        isChecked: body.isChecked
-    }
-    // Adiciona informacoes a lista "todoList".
-    todoList.push(todo);
-    console.log(todoList)
+// ---------------------------- Antiga Programacao ---------------------------//
 
-    // Status de retorno de resposta da funcao.
-    response.status(201).end()
-});
+// // read all
+// app.get('/todo', function (req, res) {
+//     res.json({
+//         response: todoList
+//     })
+// })
+// // readbyid
+// app.get('/todo/:id', function (request, response) {
 
-// Metodo de requisicao HTTP que substitui/atualiza as informacoes ja adicionadas. ( UPDATE)
-app.put('/todo/:id', (request, response) => {
-    console.log(request.params)
+//     // Pega o ID do path.params.
+//     const id = request.params.id
 
-    // Variavel que recebe o ID por parametro.
-    const id = request.params.id
+//     // Varre a lista de TODO e RETORNA O OBJETO CASO ENCONTRE.
+//     const todo = todoList.find((obj) => {
+//         return obj._id === id
+//     })
+//     // Responde para o cliente o OBJ do ID procurado.
+//     response.json({
+//         response: todo
+//     })
 
-    // Variavel que recebe body.
-    const body = request.body
+// })
+// // Metodo de requisicao HTTP que inclue um elemento/s (POST)
+// app.post('/todo', (request, response) => {
 
-    // Funcao que mapeia a lista buscando o ID passado como parametro.
-    const newList = todoList.map((obj) => {
-        console.log(obj)
+//     // variavel que recebe o body
+//     const body = request.body
 
-        // Se o ID passado por parametro for igual a algum ID da lista, as informacoes sao atualizadas. 
-        if (obj._id === id) {
-            console.log(Object.assign({}, obj, body))
+//     // variavel que recebe um numero aleatorio como id.
+//     const id = Math.random()
 
-            // Retorna um novo objeto concatenado as propriedades dos objetos fornecidos.
-            return Object.assign({}, obj, body)
-        }
-        // Retorna o objeto.
-        return obj;
-    });
+//     //  Variavel Objeto que preenche as chaves com as informacoes adicionadas.
+//     const todo = {
+//         _id: id,
+//         text: body.text,
+//         isChecked: body.isChecked
+//     }
+//     // Adiciona informacoes a lista "todoList".
+//     todoList.push(todo);
+//     console.log(todoList)
 
-    console.log(newList)
+//     // Status de retorno de resposta da funcao.
+//     response.status(201).end()
+// });
 
-    // Substitui as informacoes da lista original pelas da nova (atualizacao).
-    todoList = newList
+// // Metodo de requisicao HTTP que substitui/atualiza as informacoes ja adicionadas. ( UPDATE)
+// app.put('/todo/:id', (request, response) => {
+//     console.log(request.params)
 
-    // Responde com o id.
-    response.json({
-        response: id
-    });
-})
+//     // Variavel que recebe o ID por parametro.
+//     const id = request.params.id
 
-// Metodo de requisicao HTTP que deleta informacoes da lista.
-app.delete('/todo/:id', (request, response) => {
+//     // Variavel que recebe body.
+//     const body = request.body
 
-    // Variavel que recebe o ID como Parametro.
-    const id = request.params.id
+//     // Funcao que mapeia a lista buscando o ID passado como parametro.
+//     const newList = todoList.map((obj) => {
+//         console.log(obj)
 
-    // Nova Lista criada vazia.
-    const newList = []
+//         // Se o ID passado por parametro for igual a algum ID da lista, as informacoes sao atualizadas. 
+//         if (obj._id === id) {
+//             console.log(Object.assign({}, obj, body))
 
-    // Funcao que varre a lista.
-    todoList.forEach((obj) => {
-        console.log(obj)
+//             // Retorna um novo objeto concatenado as propriedades dos objetos fornecidos.
+//             return Object.assign({}, obj, body)
+//         }
+//         // Retorna o objeto.
+//         return obj;
+//     });
 
-        // Se o ID da lista for diferente do ID passado por parametro. Adiciona na nova lista. 
-        if (obj._id !== id) {
-            // Adiciona as informacoes na nova lista.
-            newList.push(obj)
+//     console.log(newList)
 
-        }
-    })
-    console.log(newList)
+//     // Substitui as informacoes da lista original pelas da nova (atualizacao).
+//     todoList = newList
 
-    // Substitui a Lista antiga pela atual.
-    todoList = newList
+//     // Responde com o id.
+//     response.json({
+//         response: id
+//     });
+// })
 
-    // Status de retorno da resposta da funcao.
-    response.status(201).end()
-})
-console.log('Serve On')
+// // Metodo de requisicao HTTP que deleta informacoes da lista.
+// app.delete('/todo/:id', (request, response) => {
+
+//     // Variavel que recebe o ID como Parametro.
+//     const id = request.params.id
+
+//     // Nova Lista criada vazia.
+//     const newList = []
+
+//     // Funcao que varre a lista.
+//     todoList.forEach((obj) => {
+//         console.log(obj)
+
+//         // Se o ID da lista for diferente do ID passado por parametro. Adiciona na nova lista. 
+//         if (obj._id !== id) {
+//             // Adiciona as informacoes na nova lista.
+//             newList.push(obj)
+
+//         }
+//     })
+//     console.log(newList)
+
+//     // Substitui a Lista antiga pela atual.
+//     todoList = newList
+
+//     // Status de retorno da resposta da funcao.
+//     response.status(201).end()
+// })
+// console.log('Serve On')
 
 // Adiciona a aplicacao na porta 3000 (neste caso). localhost:3000 
 app.listen(3000)
