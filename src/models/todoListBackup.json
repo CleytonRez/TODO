@@ -1,7 +1,7 @@
 {
     "data": [
         {
-            "id": "1",
+            "id": 1,
             "text": "Acordar",
             "isChecked": true
         }

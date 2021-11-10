@@ -7,7 +7,7 @@ const path = "./src/models/todoList.json"
 const readFile = util.promisify(fs.readFile);
 const writeFile = util.promisify(fs.writeFile);
 
-export const readList = async () => {
+export const readTODO = async () => {
     console.log("LENDO READLIST")
     try {
         // Abre lista do Models.
@@ -28,7 +28,7 @@ export const readList = async () => {
     }
 }
 
-export const createList = async (listCreate) => {
+export const createTODO = async (todoCreate) => {
     try {
 
         // Abre lista do Models.
@@ -42,11 +42,11 @@ export const createList = async (listCreate) => {
         const dataJSON = parseJSON;
 
         // Adicionar cliente na lista -  Cria ID aleatorio .
-        listCreate.id = Math.random()
-        console.log(listCreate)
+        todoCreate.id = Math.random()
+        console.log(todoCreate)
 
         // Adicionou as informaçoes no JSON
-        dataJSON.data.push(listCreate);
+        dataJSON.data.push(todoCreate);
 
         // Fazer o .Stringify do objeto.
         const jsonStringify = JSON.stringify(dataJSON)
@@ -61,30 +61,26 @@ export const createList = async (listCreate) => {
     }
 }
 
-export const updateList = async (listUpdate) => {
+export const updateTODO = async (todoUpdate) => {
     try {
 
         // Abre lista do Models.
         const file = await readFile(path, "utf8");
-        console.log("FILE: ", file)
-        console.log("LISTUPDATE: ", listUpdate)
 
         // Faz o PARSE
         const parseJSON = JSON.parse(file)
 
         // dataJSON contendo parseJSON
         const dataJSON = parseJSON;
-        console.log("DATAJSON: ", dataJSON)
 
-        const newList = dataJSON.data.map((text) => {
-            console.log("TEXT: ", listUpdate)
-            if (text.id === listUpdate.id) {
-                return Object.assign({}, text, listUpdate)
+        const newList = dataJSON.data.map((todo) => {
+            if (todo.id === todoUpdate.id) {
+                return Object.assign({}, todo, todoUpdate)
             }
-            return text;
+            return todo;
 
         })
-
+        console.log("NEWLIST: ", newList)
         // Fazer o .Stringify do objeto.
         const jsonStringify = JSON.stringify(
             {
@@ -101,7 +97,7 @@ export const updateList = async (listUpdate) => {
     }
 }
 
-export const deleteList = async (listDelete) => {
+export const deleteTODO = async (todoDelete) => {
     try {
         // Abre lista do Models.
         const file = await readFile(path, "utf8");
@@ -116,9 +112,9 @@ export const deleteList = async (listDelete) => {
 
         const newList = []
 
-        dataJSON.data.forEach((text) => {
-            if (text.id !== listDelete)
-                newList.push(text)
+        dataJSON.data.forEach((todo) => {
+            if (todo.id !== todoDelete)
+                newList.push(todo)
         });
 
         console.log("NEWLIST: ", newList)
@@ -135,7 +131,7 @@ export const deleteList = async (listDelete) => {
         writeFile(path, jsonStringify)
 
         // Retorna o ID.
-        return listDelete.id
+        return todoDelete.id
 
     } catch (e) {
         console.log(e.message)

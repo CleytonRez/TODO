@@ -1,13 +1,13 @@
 import { request, response } from "express";
-import { createList, deleteList, readList, updateList } from "../services/services";
+import { createTODO, deleteTODO, readTODO, updateTODO } from "../services/services";
 
 export default (app) => {
     if (app) {
         app.get("/todo", async (request, response) => {
             const data = {
-                // Resposta que inicia funcao "readList".
+                // Resposta que inicia funcao "readTODO".
 
-                response: await readList()
+                response: await readTODO()
             }
             // Retorna as informacoes para o usuario.
             response.json(data);
@@ -20,13 +20,13 @@ export default (app) => {
             const body = request.body
             try {
                 // Variavel que inicia funcao de criacao de List.
-                const idCreateList = await createList(body);
+                const idCreateTODO = await createTODO(body);
 
                 // Retornar 201 como status e ...
                 response.status(201).json(
                     {
                         // ... Seta as informacoes da funcao.
-                        response: idCreateList
+                        response: idCreateTODO
                     }
                 )
 
@@ -46,15 +46,14 @@ export default (app) => {
 
             // Converte a String para Number.
             body.id = Number(id)
-
             try {
-                // Chama funcao de Update "updateList"
-                const idUpdateList = await updateList(body);
+                // Chama funcao de Update "updateTODO"
+                const idUpdateTODO = await updateTODO(body);
                 // Retornar 201 como status e ...
                 response.status(201).json(
                     {
                         // ... Seta as informacoes da funcao.
-                        response: idUpdateList
+                        response: idUpdateTODO
                     }
                 )
             } catch (e) {
@@ -71,12 +70,12 @@ export default (app) => {
             const id = Number(request.params.id)
 
             // Variavel que inicia a funcao "deleteclient".
-            const idDeleteList = await deleteList(id);
+            const idDeleteTODO = await deleteTODO(id);
             // Retornar 201 como status e ...
             response.status(201).json(
                 {
                     // ... Seta as informacoes da funcao.
-                    response: idDeleteList
+                    response: idDeleteTODO
                 }
             )
         })

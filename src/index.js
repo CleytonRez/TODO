@@ -1,34 +1,34 @@
 // Importa express do arquivo express.
 import express from "express"
-import { readList, createList, updateList, deleteList } from "./services/services"
-import listController from "./controllers/listControllers";
+import { readTODO, createTODO, updateTODO, deleteTODO } from "./services/services"
+import todoController from "./controllers/todoController";
 
 
 //variavel que recebe express
 const app = express();
 app.use(express.json());
 
-listController(app)
+todoController(app)
 
 // ---------------------------- CRUD ---------------------------//
 
-// readList()
+// readTODO()
 
-// createList(
+// createTODO(
 //   {
 //     "text": "Tomar Café da Manha ",
 //     "isChecked": false
 // }
 //)
 
-// updateList(
+// updateTODO(
 //     {
 //         "id": "1",
 //         "text": "Almoçar"
 //     }
 // );
 
-// deleteList(
+// deleteTODO(
 //     {
 //         "id": "1"
 //     }
